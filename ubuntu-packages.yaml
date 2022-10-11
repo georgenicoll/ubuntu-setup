@@ -13,6 +13,7 @@
     - keepassxc
     - curl
     - pavucontrol
+    - openssh-server
 
 - name: Remove packages
   ansible.builtin.apt:
