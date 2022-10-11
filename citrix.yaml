@@ -1,0 +1,75 @@
+---
+- name: (Manually) Download and Install Citrix
+  vars:
+    citrix_package_version: "22_05_0"
+    citrix_version: 22.5.0.16
+    citrix_file: ~/Downloads/linuxx64-{{ citrix_version }}.tar.gz
+  block:
+
+  - name: Check for downloaded citrix package
+    become: no
+    ansible.builtin.stat:
+      path: "{{ citrix_file }}"
+    register: citrix
+
+  - name: Fail on no citrix file
+    ansible.builtin.fail:
+      msg: > 
+        {{ citrix_file }} not found.  Download version {{ citrix_version }} from
+        https://www.citrix.com/downloads/workspace-app/
+        to {{ citrix_file }}
+    when: not citrix.stat.exists
+
+  - name: tell nix about the prefetch
+    become: no
+    ansible.builtin.shell: nix-prefetch-url file://{{ citrix.stat.path }}
+
+  - name: Install the version
+    become: no
+    ansible.builtin.shell: NIXPKGS_ALLOW_UNFREE=1 nix-env -iA nixpkgs.citrix_workspace_{{ citrix_package_version }}
+
+  - name: Set up nix desktop file
+    ansible.builtin.include_tasks: nix-desktop-file.yaml
+    loop:
+    - {
+        desktop_file: wfica.desktop, 
+        add_link: true,
+        icon: citrix.png, 
+        fix_icon: false
+      }
+
+  - name: Citrix ini tweaks
+    block:
+    # See https://askubuntu.com/questions/1311786/citrix-workspace-no-audio-options-microphone-not-working
+    - name: Get user home_dir
+      become: no
+      ansible.builtin.shell: echo ~
+      register: home_dir
+    - name: Enable Pulse Audio in module.ini
+      become: yes
+      community.general.ini_file:
+        path: "{{ home_dir.stdout }}/.nix-profile/opt/citrix-icaclient/config/module.ini"
+        state: present
+        section: ClientAudio
+        option: AudioRedirectionV4
+        value: "True"
+        no_extra_spaces: yes
+    - name: Enable Microphone in wfclient.ini
+      become: no
+      community.general.ini_file:
+        path: "~/.ICAClient/wfclient.ini"
+        state: present
+        section: WFClient
+        option: AllowAudioInput
+        value: "True"
+        no_extra_spaces: yes
+    # and https://askubuntu.com/questions/195934/alttab-doesnt-work-when-citrix-is-in-full-screen
+    - name: Enable Transparent Key Pass Through
+      become: yes
+      community.general.ini_file:
+        path: "{{ home_dir.stdout }}/.nix-profile/opt/citrix-icaclient/config/All_Regions.ini"
+        state: present
+        section: "Virtual Channels\\Keyboard"
+        option: TransparentKeyPassthrough
+        value: "Remote"
+        no_extra_spaces: yes

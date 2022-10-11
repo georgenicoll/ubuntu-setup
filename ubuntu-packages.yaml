@@ -1,0 +1,23 @@
+---
+- name: Update & Upgrade
+  ansible.builtin.apt:
+    update-cache: yes
+    upgrade: yes
+
+- name: Install packages
+  ansible.builtin.apt:
+    state: present
+    pkg:
+    - vim
+    - fzf
+    - keepassxc
+    - curl
+    - pavucontrol
+
+- name: Remove packages
+  ansible.builtin.apt:
+    state: absent
+    pkg:
+    - chromium-browser
+    - firefox 
+

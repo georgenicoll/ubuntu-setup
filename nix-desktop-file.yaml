@@ -1,0 +1,29 @@
+---
+- name: Get user home
+  become: no
+  ansible.builtin.shell: echo ~
+  register: home_dir
+
+- name: Add soft link for {{ item.desktop_file }}
+  become: no
+  ansible.builtin.file:
+    state: link
+    src: ~/.nix-profile/share/applications/{{ item.desktop_file }}
+    path: ~/.local/share/applications/{{ item.desktop_file }}
+  when: item.add_link
+
+- name: Copy {{ item.icon }}
+  become: no
+  ansible.builtin.copy:
+    src: "desktop/{{ item.icon }}"
+    dest: ~/.local/share/applications
+  when: item.fix_icon
+
+- name: Fix icon path in nix desktop file for '{{ item.icon }}'
+  become: yes
+  ansible.builtin.lineinfile:
+    path: "{{ home_dir.stdout }}/.nix-profile/share/applications/{{ item.desktop_file }}"
+    line: Icon={{ home_dir.stdout }}/.local/share/applications/{{ item.icon }}
+    regexp: ^Icon=.*$
+    state: present
+  when: item.fix_icon

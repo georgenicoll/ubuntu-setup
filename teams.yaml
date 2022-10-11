@@ -1,0 +1,16 @@
+---
+- name: Get user home
+  become: no
+  ansible.builtin.shell: echo ~
+  register: home_dir
+
+- name: Download the teams deb
+  become: no
+  ansible.builtin.get_url:
+    url: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x809&culture=en-gb&country=GB
+    dest: ~/Downloads/teams.deb
+
+- name: Install teams
+  become: yes
+  ansible.builtin.apt:
+    deb: "{{ home_dir.stdout }}/Downloads/teams.deb"

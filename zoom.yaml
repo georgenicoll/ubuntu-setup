@@ -1,0 +1,16 @@
+---
+- name: Get user home
+  become: no
+  ansible.builtin.shell: echo ~
+  register: home_dir
+
+- name: Download the zoom deb
+  become: no
+  ansible.builtin.get_url:
+    url: https://zoom.us/client/latest/zoom_amd64.deb
+    dest: ~/Downloads/zoom_amd64.deb
+
+- name: Install zoom
+  become: yes
+  ansible.builtin.apt:
+    deb: "{{ home_dir.stdout }}/Downloads/zoom_amd64.deb"

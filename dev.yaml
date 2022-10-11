@@ -1,0 +1,20 @@
+---
+- name: Install Dev tools
+  block:
+
+  - name: Images
+    ansible.builtin.apt:
+      pkg:
+      - gimp
+
+  - name: java
+    ansible.builtin.apt:
+      pkg:
+      - openjdk-18-jdk
+      - maven
+      - gradle
+
+  - name: python
+    ansible.builtin.apt:
+      pkg:
+      - python3

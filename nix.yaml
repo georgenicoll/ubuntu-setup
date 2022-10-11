@@ -1,0 +1,39 @@
+---
+- name: Tasks
+  become: false
+  block:
+
+  - name: Find nix-env 
+    ansible.builtin.shell: which nix-env || echo "Not There"
+    register: nix_env_location
+
+  - name: nix-env-location output
+    ansible.builtin.debug:
+      var: nix_env_location
+
+  - name: Bomb out and ask user to download nix if it's not there
+    ansible.builtin.fail:
+      msg: > 
+        nix was not found, please install by following instructions at
+        https://nixos.org/manual/nix/stable/installation/installing-binary.html
+        to install a multi user installation
+        [usually $ sh <(curl -L https://nixos.org/nix/install) --daemon]
+    when: nix_env_location.stdout == "Not There"
+
+  - name: Update channels
+    ansible.builtin.shell: nix-channel --update
+
+  - name: Installing nix packages
+    ansible.builtin.include_tasks: nix-install-app.yaml
+    loop:
+      - nixpkgs.firefox
+
+  - name: Nix desktop links
+    ansible.builtin.include_tasks: nix-desktop-file.yaml
+    loop:
+    - { 
+        desktop_file: firefox.desktop, 
+        add_link: true,
+        icon: firefox.png, 
+        fix_icon: true 
+      }

@@ -1,0 +1,11 @@
+---
+- name: Nix Install Apps
+  become: false
+  block:
+
+  - name: Output Item
+    ansible.builtin.debug:
+      var: item
+  - name: Installing {{ item }}
+    ansible.builtin.shell: nix-env -iA {{ item }}
+
