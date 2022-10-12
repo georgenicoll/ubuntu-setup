@@ -31,4 +31,9 @@
  
   - name: Install Dev Tools
     ansible.builtin.import_tasks: dev.yaml
- 
+
+  - name: Install Docker
+    ansible.builtin.import_tasks: docker.yaml
+  
+  - name: Install k8s Tools
+    ansible.builtin.import_tasks: k8s.yaml

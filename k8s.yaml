@@ -1,0 +1,74 @@
+---
+- name: k8s tools
+  become: yes
+  block:
+
+  - name: k8s tools pre-reqs
+    ansible.builtin.apt:
+      pkg:
+      - ca-certificates
+      - curl
+      - apt-transport-https
+      - fzf
+
+  - name: Get architecture
+    ansible.builtin.shell: dpkg --print-architecture
+    register: architecture
+
+  # Adapted from https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management
+  - name: Add kubernetes-archive gpg key
+    ansible.builtin.apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      keyring: /etc/apt/keyrings/kubernetes-archive.gpg
+
+  - name: Add kubernetes repo
+    ansible.builtin.apt_repository:
+      repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-archive.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+      state: present
+
+  # See https://helm.sh/docs/intro/install/#from-apt-debianubuntu
+  - name: Add helm gpg key
+    ansible.builtin.apt_key:
+      url: https://baltocdn.com/helm/signing.asc
+      keyring: /etc/apt/keyrings/helm.gpg
+
+  - name: Add helm {{ architecture.stdout }} repo
+    ansible.builtin.apt_repository:
+      repo: "deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+      state: present
+      
+  - name: Install tools
+    ansible.builtin.apt:
+      update_cache: yes
+      pkg:
+      - kubectl
+      - helm
+
+  - name: krew and kind
+    become: no
+    block:
+
+    # See https://krew.sigs.k8s.io/docs/user-guide/setup/install/
+    - name: Install krew
+      ansible.builtin.script: scripts/krew-install.sh
+      args:
+        executable: bash
+
+    - name: Add krew to path
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        state: present
+        line: 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"'
+        regexp: "export PATH=\"\\${KREW_ROOT:-\\$HOME/.krew}/bin:\\$PATH\""
+
+    - name: Update krew plugin list
+      ansible.builtin.shell: ~/.krew/bin/kubectl-krew update
+
+    - name: Fetch krew plugin {{ item }}
+      ansible.builtin.shell: ~/.krew/bin/kubectl-krew install {{ item }}
+      loop:
+      - ctx
+      - ns
+
+    - name: Install kind
+      ansible.builtin.shell: go install sigs.k8s.io/kind@latest

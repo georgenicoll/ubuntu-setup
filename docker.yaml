@@ -1,0 +1,57 @@
+# Adapted from https://docs.docker.com/engine/install/ubuntu/
+- name: Docker install tasks
+  become: yes
+  block:
+
+  - name: Install docker pre-reqs
+    ansible.builtin.apt:
+      pkg:
+      - ca-certificates
+      - gnupg
+      - lsb-release
+
+  - name: Add docker gpg key
+    ansible.builtin.apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      keyring: /etc/apt/keyrings/docker.gpg
+
+  - name: Get architecture
+    ansible.builtin.shell: dpkg --print-architecture
+    register: architecture
+
+  - name: Get distribution
+    ansible.builtin.shell: lsb_release -cs
+    register: distribution
+
+  - name: Add docker repo arch={{ architecture.stdout }}, distribution={{ distribution.stdout }}
+    ansible.builtin.apt_repository:
+      repo: "deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ distribution.stdout }} stable"
+      state: present
+
+  - name: Install docker
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+
+  - name: create docker group
+    ansible.builtin.group:
+      state: present
+      name: docker
+
+  - name: Get User
+    become: no
+    ansible.builtin.shell: whoami
+    register: user_output
+
+  - name: Add user {{ user_output.stdout }} to docker group
+    ansible.builtin.user:
+      name: "{{ user_output.stdout }}"
+      groups:
+        - docker
+      append: yes
+
+  
