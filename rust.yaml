@@ -1,0 +1,36 @@
+---
+- name: rust installation steps
+  become: no
+  block:
+
+  - name: rustup already
+    ansible.builtin.shell: which rustup || echo "Missing"
+    register: rustup
+
+  - name: which rustup return
+    ansible.builtin.debug:
+      var: rustup.stdout
+
+  - name: install rustup
+    when: rustup.stdout == "Missing"
+    block:
+
+    - name: download rustup
+      ansible.builtin.get_url:
+        url: https://sh.rustup.rs
+        dest: ~/Downloads/rustup-init.sh
+        mode: a+x
+        force: yes
+      register: rustup_init
+
+    - name: run rustup-init.sh
+      ansible.builtin.shell: "{{ rustup_init.dest }} -y"
+      register: rustup_init_output
+
+    - name: rustup init output
+      ansible.builtin.debug:
+        var: rustup_init_output.stdout_lines
+
+  - name: Update rustup on path
+    ansible.builtin.shell: rustup update
+    when: rustup.stdout != "Missing"

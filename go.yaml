@@ -1,0 +1,39 @@
+---
+- name: go installation steps
+  become: no
+  block:
+
+  - name: Find go
+    ansible.builtin.shell: which go || echo "Missing"
+    register: which_go
+
+  - name: Remove go and reinstall, maybe ...
+    ansible.builtin.debug:
+      msg: >
+        Go is already installed at {{ which_go.stdout }}.
+        Remove and re-run to install a new version.
+        Remove by running: rm -rf {{ which_go.stdout }}
+    when: which_go.stdout != "Missing"
+
+  - name: Install go
+    when: which_go.stdout == "Missing"
+    block:
+
+    - name: Download go file
+      ansible.builtin.get_url:
+        url: https://go.dev/dl/go1.19.2.linux-amd64.tar.gz
+        dest: ~/Downloads/
+      register: go_download
+
+    - name: unpack file to /usr/local
+      become: yes
+      ansible.builtin.unarchive:
+        src: "{{ go_download.dest }}"
+        dest: /usr/local
+
+    - name: Add go to path
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        state: present
+        line: 'export PATH=/usr/local/go/bin:$PATH'
+        regexp: "export PATH=/usr/local/go/bin:\\$PATH"

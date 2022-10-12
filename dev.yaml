@@ -18,3 +18,9 @@
     ansible.builtin.apt:
       pkg:
       - python3
+
+  - name: rust
+    ansible.builtin.import_tasks: rust.yaml
+
+  - name: go
+    ansible.builtin.import_tasks: go.yaml
