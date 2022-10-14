@@ -7,5 +7,5 @@
     ansible.builtin.debug:
       var: item
   - name: Installing {{ item }}
-    ansible.builtin.shell: nix-env -iA {{ item }}
+    ansible.builtin.shell: NIXPKGS_ALLOW_UNFREE=1 nix-env -iA {{ item }}
 

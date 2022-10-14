@@ -27,6 +27,7 @@
     ansible.builtin.include_tasks: nix-install-app.yaml
     loop:
       - nixpkgs.firefox
+      - nixpkgs.obsidian
 
   - name: Nix desktop links
     ansible.builtin.include_tasks: nix-desktop-file.yaml
@@ -36,4 +37,10 @@
         add_link: true,
         icon: firefox.png, 
         fix_icon: true 
+      }
+    - {
+        desktop_file: obsidian.desktop,
+        add_link: true,
+        icon: obsidian.png,
+        fix_icon: true
       }
