@@ -1,14 +1,19 @@
 ---
-- name: Download dropbox
-  become: no
-  ansible.builtin.get_url:
-    dest: ~/Downloads/dropbox.deb
-    url: https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2020.03.04_amd64.deb
-    force: true
-  register: dropbox_result
+- name: Dropbox Install
+  ignore_errors: yes # Download often fails - despite the url being correct
+  block: 
 
-- name: Install dropbox
-  become: yes
-  ansible.builtin.apt:
-    deb: "{{ dropbox_result.dest }}"
+  - name: Download dropbox
+    become: no
+    ansible.builtin.get_url:
+      dest: ~/Downloads/dropbox.deb
+      url: https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2020.03.04_amd64.deb
+      http_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0"
+      force: true
+    register: dropbox_result
+
+  - name: Install dropbox
+    become: yes
+    ansible.builtin.apt:
+      deb: "{{ dropbox_result.dest }}"
 

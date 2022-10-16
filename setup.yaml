@@ -11,6 +11,9 @@
   - name: Install nix and nix packages
     ansible.builtin.import_tasks: nix.yaml
 
+  - name: Install utilites to access this remotely
+    ansible.builtin.import_tasks: remote-access.yaml
+
   - name: Install vscode
     ansible.builtin.import_tasks: vscode.yaml
 

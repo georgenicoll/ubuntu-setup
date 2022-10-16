@@ -1,0 +1,9 @@
+# and https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-22-04
+- name: Install and setup tools for remote access
+  become: yes
+  block:
+
+  - name: Install tightvnc
+    ansible.builtin.apt:
+      pkg:
+        - tightvncserver
