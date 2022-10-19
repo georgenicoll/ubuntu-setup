@@ -34,3 +34,17 @@
   - name: Update rustup on path
     ansible.builtin.shell: rustup update
     when: rustup.stdout != "Missing"
+
+  - name: Install other stuff (llvm)
+    become: yes
+    ansible.builtin.apt:
+      pkg:
+        - wget
+        - build-essential
+        - software-properties-common
+        - lsb-release
+        - libelf-dev
+        - linux-headers-generic
+        - pkg-config
+        - llvm-13
+        - llvm-14
