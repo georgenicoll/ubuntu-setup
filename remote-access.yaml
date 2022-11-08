@@ -3,7 +3,8 @@
   become: yes
   block:
 
-  - name: Install tightvnc
+  - name: Don't Install tightvnc
     ansible.builtin.apt:
+      state: absent
       pkg:
         - tightvncserver
