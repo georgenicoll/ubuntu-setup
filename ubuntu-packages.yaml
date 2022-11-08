@@ -16,6 +16,10 @@
     - openssh-server
     - ansible
     - ansible-lint
+    - linux-tools-common
+    - linux-tools-generic
+    - gnome-pie
+    - inetutils-traceroute
 
 - name: Remove packages
   ansible.builtin.apt:

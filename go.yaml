@@ -38,9 +38,17 @@
         line: 'export PATH=/usr/local/go/bin:$PATH'
         regexp: "export PATH=/usr/local/go/bin:\\$PATH"
 
+    - name: Add GOPATH
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        state: present
+        line: 'export GOPATH=~/go'
+        regexp: "export GOPATH=~/go"
+
     - name: Add go installed modules to path
       ansible.builtin.lineinfile:
         path: ~/.bashrc
         state: present
-        line: 'export PATH=~/go/bin:$PATH'
-        regexp: "export PATH=~/go/bin:\\$PATH"
+        line: 'export PATH=$GOPATH/bin:$PATH'
+        regexp: "export PATH=\\$GOPATH/bin:\\$PATH"
+
