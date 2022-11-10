@@ -1,3 +1,4 @@
 .vscode/
 *.deb
 *.tar.gz
+wget-log*

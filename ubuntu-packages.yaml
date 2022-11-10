@@ -20,6 +20,7 @@
     - linux-tools-generic
     - gnome-pie
     - inetutils-traceroute
+    - htop
 
 - name: Remove packages
   ansible.builtin.apt:

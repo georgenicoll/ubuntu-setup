@@ -7,7 +7,7 @@
 
   - name: Install Ubuntu Packages
     ansible.builtin.import_tasks: ubuntu-packages.yaml
-   
+ 
   - name: Install nix and nix packages
     ansible.builtin.import_tasks: nix.yaml
 
@@ -31,12 +31,18 @@
 
   - name: Install Dropbox
     ansible.builtin.import_tasks: dropbox.yaml
- 
+
   - name: Install Dev Tools
     ansible.builtin.import_tasks: dev.yaml
 
   - name: Install Docker
     ansible.builtin.import_tasks: docker.yaml
-  
+
   - name: Install k8s Tools
     ansible.builtin.import_tasks: k8s.yaml
+
+  - name: Install vagrant
+    ansible.builtin.import_tasks: vagrant.yaml
+
+  - name: Install virtualization tools
+    ansible.builtin.import_tasks: virtualization.yaml
