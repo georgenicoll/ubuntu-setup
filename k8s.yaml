@@ -44,6 +44,22 @@
       - kubectl
       - helm
 
+  - name: Put code completion lines in ~/.bashrc
+    become: no
+    block:
+
+    - name: Add kubectl completions
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        regexp: "source <\\(kubectl completion bash\\)"
+        line: source <(kubectl completion bash)
+
+    - name: Add helm completions
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        regexp: "source <\\(helm completion bash\\)"
+        line: source <(helm completion bash)
+
   - name: krew and kind
     become: no
     block:

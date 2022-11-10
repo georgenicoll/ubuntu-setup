@@ -1,0 +1,10 @@
+# See https://developer.hashicorp.com/vagrant/downloads
+---
+- name: Virtualization Tasks
+  become: yes
+  block:
+
+  - name: Install packages
+    ansible.builtin.apt:
+      pkg:
+      - virtualbox
