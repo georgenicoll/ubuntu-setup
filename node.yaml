@@ -1,0 +1,48 @@
+---
+- name: Install node
+  become: no
+  block:
+
+  - name: fnm already
+    ansible.builtin.shell: which fnm || echo "Missing"
+    register: fnm
+
+  - name: which fnm return
+    ansible.builtin.debug:
+      var: fnm.stdout
+
+  - name: install fnm
+    when: fnm.stdout == "Missing"
+    block:
+
+    - name: Download Installer
+      ansible.builtin.get_url:
+        url: https://fnm.vercel.app/install
+        dest: ~/Downloads/fnm-install.sh
+        mode: a+x
+        force: yes
+      register: fnm_script
+
+    - name: Run fnm_script
+      ansible.builtin.shell: bash {{ fnm_script.dest }}
+
+    - name: eval fnm
+      ansible.builtin.shell: eval "$(fnm env)"
+
+  - name: add bash fnm environment setup to ~/.bashrc
+    ansible.builtin.lineinfile:
+      path: ~/.bashrc
+      state: present
+      line: 'eval "$(fnm env --use-on-cd)"'
+      regexp: "eval \"\\$(fnm env --use-on-cd)\""
+
+  - name: node already
+    ansible.builtin.shell: which node || echo "Missing"
+    register: node
+
+  - name: no node
+    when: node.stdout == "Missing"
+    block:
+
+    - name: fnm install
+      ansible.builtin.shell: ~/.fnm/fnm install --lts

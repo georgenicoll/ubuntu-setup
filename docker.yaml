@@ -28,12 +28,18 @@
       repo: "deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ distribution.stdout }} stable"
       state: present
 
+  - name: Remove podman-docker
+    ansible.builtin.apt:
+      state: absent
+      pkg:
+      - podman-docker
+
   - name: Install docker
     ansible.builtin.apt:
       update_cache: true
       pkg:
-      - docker-ce
       - docker-ce-cli
+      - docker-ce
       - containerd.io
       - docker-compose-plugin
 
