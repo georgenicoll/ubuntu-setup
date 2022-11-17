@@ -1,8 +1,26 @@
+# All tasks here expect become: yes
 ---
-- name: Update And Upgrade
+- name: Perform initial housekeeping
+  block:
+  - name: apt update, clean And upgrade
+    ansible.builtin.apt:
+      autoclean: yes
+      #clean: yes
+      update-cache: yes
+      upgrade: yes
+  - name: Reduce snap retention
+    ansible.builtin.shell: snap set system refresh.retain=2
+  - name: Run snap cleanup
+    ansible.builtin.script: scripts/snap-cleanup.sh
+    args:
+      executable: bash      
+
+- name: Remove packages
   ansible.builtin.apt:
-    update-cache: yes
-    upgrade: yes
+    state: absent
+    pkg:
+    - chromium-browser
+    - firefox
 
 - name: Install packages
   ansible.builtin.apt:
@@ -21,11 +39,3 @@
     - gnome-pie
     - inetutils-traceroute
     - htop
-
-- name: Remove packages
-  ansible.builtin.apt:
-    state: absent
-    pkg:
-    - chromium-browser
-    - firefox 
-

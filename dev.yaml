@@ -30,3 +30,5 @@
   - name: c/c++/etc...
     ansible.builtin.import_tasks: c-etc.yaml
 
+  - name: node
+    ansible.builtin.import_tasks: node.yaml
