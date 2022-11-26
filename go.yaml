@@ -51,4 +51,3 @@
         state: present
         line: 'export PATH=$GOPATH/bin:$PATH'
         regexp: "export PATH=\\$GOPATH/bin:\\$PATH"
-
