@@ -59,5 +59,3 @@
       groups:
         - docker
       append: yes
-
-  
