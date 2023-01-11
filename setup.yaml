@@ -7,7 +7,10 @@
 
   - name: Install Ubuntu Packages
     ansible.builtin.import_tasks: ubuntu-packages.yaml
- 
+
+  - name: Teleport
+    ansible.builtin.import_tasks: teleport.yaml
+
   - name: Install nix and nix packages
     ansible.builtin.import_tasks: nix.yaml
 

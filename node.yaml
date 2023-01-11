@@ -45,4 +45,4 @@
     block:
 
     - name: fnm install
-      ansible.builtin.shell: ~/.fnm/fnm install --lts
+      ansible.builtin.shell: fnm install --lts

@@ -1,0 +1,34 @@
+---
+- name: Download teleport gpg key
+  ansible.builtin.get_url:
+    url: https://apt.releases.teleport.dev/gpg
+    dest: /usr/share/keyrings/teleport-archive-keyring.asc
+
+- name: Get OS ID
+  ansible.builtin.shell:
+    cmd: /bin/bash -c 'source /etc/os-release && echo "${ID?}"'
+  register: ID_output
+
+- name: Output OS ID
+  ansible.builtin.debug:
+    msg: "{{ ID_output.stdout }}"
+
+- name: Get VERSION_CODENAME
+  ansible.builtin.shell:
+    cmd: /bin/bash -c 'source /etc/os-release && echo "${VERSION_CODENAME?}"'
+  register: VERSION_CODENAME_output
+
+- name: Output OS VERSION_CODENAME
+  ansible.builtin.debug:
+    msg: "{{ VERSION_CODENAME_output.stdout }}"
+
+- name: Add teleport repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/{{ ID_output.stdout }} {{ VERSION_CODENAME_output.stdout }} stable/v11"
+    state: present
+    update_cache: true
+
+- name: Install teleport
+  ansible.builtin.apt:
+    pkg: teleport
+    state: present
