@@ -2,7 +2,7 @@
 ---
 - name: Perform initial housekeeping
   block:
-  - name: apt update, clean And upgrade
+  - name: apt update, clean and upgrade
     ansible.builtin.apt:
       autoclean: yes
       #clean: yes
@@ -13,7 +13,7 @@
   - name: Run snap cleanup
     ansible.builtin.script: scripts/snap-cleanup.sh
     args:
-      executable: bash      
+      executable: bash
 
 - name: Remove packages
   ansible.builtin.apt:
