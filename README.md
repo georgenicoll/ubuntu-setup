@@ -14,7 +14,7 @@ Mostly this can be done using `apt` but in certain cases these use `nix` to:
 
 # Running
 
-The scripts expect to run on the local machine; the default config has been setup to do this, 
+The scripts expect to run on the local machine; the default config has been setup to do this,
 see [ansible.cfg](ansible.cfg) and [hosts.yaml](hosts.yaml).
 
 Some steps require elevation so become is required.
@@ -22,5 +22,5 @@ Some steps require elevation so become is required.
 Run with:
 
 ```bash
-ansible-playbook setup.xml
+ansible-playbook setup.yaml
 ```

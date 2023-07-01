@@ -36,7 +36,7 @@
     ansible.builtin.apt_repository:
       repo: "deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
       state: present
-      
+
   - name: Install tools
     ansible.builtin.apt:
       update_cache: yes
@@ -62,6 +62,7 @@
 
   - name: krew and kind
     become: no
+    ignore_errors: true
     block:
 
     # See https://krew.sigs.k8s.io/docs/user-guide/setup/install/

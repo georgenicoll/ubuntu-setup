@@ -7,7 +7,7 @@
 
   - name: Install Ubuntu Packages
     ansible.builtin.import_tasks: ubuntu-packages.yaml
- 
+
   - name: Install nix and nix packages
     ansible.builtin.import_tasks: nix.yaml
 
@@ -20,8 +20,9 @@
   - name: Install Citrix
     ansible.builtin.import_tasks: citrix.yaml
 
-  - name: Install Teams
-    ansible.builtin.import_tasks: teams.yaml
+# Teams now a PWA
+#  - name: Install Teams
+#    ansible.builtin.import_tasks: teams.yaml
 
   - name: Install Zoom
     ansible.builtin.import_tasks: zoom.yaml
