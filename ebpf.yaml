@@ -1,4 +1,3 @@
-# See https://developer.hashicorp.com/vagrant/downloads
 ---
 - name: ebpf tasks
   become: no
