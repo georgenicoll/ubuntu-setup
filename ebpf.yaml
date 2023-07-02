@@ -29,6 +29,10 @@
       - arping
       - netperf
       - iperf
+      - libbpf-dev
+      - linux-tools-common
+      - linux-tools-generic
+      - linux-cloud-tools-generic
 
   - name: get bcc git repo
     ansible.builtin.git:
@@ -73,4 +77,25 @@
     become: yes
     ansible.builtin.shell:
       chdir: git/bcc/build/src/python
+      cmd: make install
+
+
+  - name: get bpftool git repo
+    ansible.builtin.git:
+      repo: https://github.com/libbpf/bpftool.git
+      dest: git/bpftool
+      clone: yes
+      update: yes
+      recursive: true
+      version: master
+
+  - name: build bpftool
+    ansible.builtin.shell:
+      chdir: git/bpftool/src
+      cmd: make -j$(nproc)
+
+  - name: install bpftool
+    become: yes
+    ansible.builtin.shell:
+      chdir: git/bpftool/src
       cmd: make install
