@@ -47,3 +47,6 @@
 
   - name: Install virtualization tools
     ansible.builtin.import_tasks: virtualization.yaml
+
+  - name: Install epbf Tools
+    ansible.builtin.import_tasks: ebpf.yaml
