@@ -2,3 +2,4 @@
 *.deb
 *.tar.gz
 wget-log*
+git/

@@ -1,0 +1,100 @@
+---
+- name: ebpf tasks
+  become: no
+  block:
+
+  # See https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source
+  - name: Install packages
+    become: yes
+    ansible.builtin.apt:
+      pkg:
+      - zip
+      - bison
+      - build-essential
+      - cmake
+      - flex
+      - git
+      - libedit-dev
+      - libllvm14
+      - llvm-14-dev
+      - libclang-14-dev
+      - python3
+      - zlib1g-dev
+      - libelf-dev
+      - libfl-dev
+      - python3-setuptools
+      - liblzma-dev
+      - libdebuginfod-dev
+      - arping
+      - netperf
+      - iperf
+      - libbpf-dev
+      - linux-tools-common
+      - linux-tools-generic
+      - linux-cloud-tools-generic
+
+  - name: get bcc git repo
+    ansible.builtin.git:
+      repo: https://github.com/iovisor/bcc.git
+      dest: git/bcc
+      clone: yes
+      update: yes
+      version: master
+
+  - name: make build directory
+    ansible.builtin.file:
+      path: git/bcc/build
+      state: directory
+
+  - name: build bcc (1)
+    ansible.builtin.shell:
+      chdir: git/bcc/build
+      cmd: cmake ..
+
+  - name: build bcc (2)
+    ansible.builtin.shell:
+      chdir: git/bcc/build
+      cmd: make
+
+  - name: install bcc
+    become: yes
+    ansible.builtin.shell:
+      chdir: git/bcc/build
+      cmd: make install
+
+  - name: make python 3 binding (1)
+    ansible.builtin.shell:
+      chdir: git/bcc/build
+      cmd: cmake -DPYTHON_CMD=python3 ..
+
+  - name: make python 3 binding (2)
+    ansible.builtin.shell:
+      chdir: git/bcc/build/src/python
+      cmd: make
+
+  - name: install python 3 binding
+    become: yes
+    ansible.builtin.shell:
+      chdir: git/bcc/build/src/python
+      cmd: make install
+
+
+  - name: get bpftool git repo
+    ansible.builtin.git:
+      repo: https://github.com/libbpf/bpftool.git
+      dest: git/bpftool
+      clone: yes
+      update: yes
+      recursive: true
+      version: master
+
+  - name: build bpftool
+    ansible.builtin.shell:
+      chdir: git/bpftool/src
+      cmd: make -j$(nproc)
+
+  - name: install bpftool
+    become: yes
+    ansible.builtin.shell:
+      chdir: git/bpftool/src
+      cmd: make install
