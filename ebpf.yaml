@@ -3,7 +3,16 @@
   become: no
   block:
 
-  # See https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source
+  - name: get uname -r
+    ansible.builtin.shell: uname -r
+    register: uname_minus_r
+
+  - name: Output uname -r
+    ansible.builtin.debug:
+      msg: uname -r is '{{ uname_minus_r.stdout }}'
+
+  # See https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source and
+  #     https://github.com/georgenicoll/xdp-tutorial/blob/master/setup_dependencies.org
   - name: Install packages
     become: yes
     ansible.builtin.apt:
@@ -14,9 +23,12 @@
       - cmake
       - flex
       - git
+      - clang
+      - llvm
+      - gcc-multilib
+      - libcap-dev
       - libedit-dev
       - libllvm14
-      - llvm-14-dev
       - libclang-14-dev
       - python3
       - zlib1g-dev
@@ -29,9 +41,12 @@
       - netperf
       - iperf
       - libbpf-dev
+      - linux-tools-{{ uname_minus_r.stdout }}
+      - linux-headers-{{ uname_minus_r.stdout }}
       - linux-tools-common
       - linux-tools-generic
       - linux-cloud-tools-generic
+      - tcpdump
 
   - name: get bcc git repo
     ansible.builtin.git:

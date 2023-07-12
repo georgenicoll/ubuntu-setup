@@ -17,12 +17,12 @@
   - name: Install vscode
     ansible.builtin.import_tasks: vscode.yaml
 
-  - name: Install Citrix
-    ansible.builtin.import_tasks: citrix.yaml
+  # - name: Install Citrix
+  #   ansible.builtin.import_tasks: citrix.yaml
 
-# Teams now a PWA
-#  - name: Install Teams
-#    ansible.builtin.import_tasks: teams.yaml
+  # Teams now a PWA
+  # - name: Install Teams
+  #   ansible.builtin.import_tasks: teams.yaml
 
   - name: Install Zoom
     ansible.builtin.import_tasks: zoom.yaml
