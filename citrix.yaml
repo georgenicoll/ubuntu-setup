@@ -1,8 +1,8 @@
 ---
 - name: (Manually) Download and Install Citrix
   vars:
-    citrix_package_version: "22_05_0"
-    citrix_version: 22.5.0.16
+    citrix_package_version: "23_07_0"
+    citrix_version: 23.7.0.17
     citrix_file: ~/Downloads/linuxx64-{{ citrix_version }}.tar.gz
   block:
 
@@ -14,7 +14,7 @@
 
   - name: Fail on no citrix file
     ansible.builtin.fail:
-      msg: > 
+      msg: >
         {{ citrix_file }} not found.  Download version {{ citrix_version }} from
         https://www.citrix.com/downloads/workspace-app/
         to {{ citrix_file }}
@@ -32,9 +32,9 @@
     ansible.builtin.include_tasks: nix-desktop-file.yaml
     loop:
     - {
-        desktop_file: wfica.desktop, 
+        desktop_file: wfica.desktop,
         add_link: true,
-        icon: citrix.png, 
+        icon: citrix.png,
         fix_icon: false
       }
 
