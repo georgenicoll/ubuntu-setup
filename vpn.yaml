@@ -1,0 +1,7 @@
+---
+- name: Install VPN packages
+  become: yes
+  ansible.builtin.apt:
+    state: present
+    pkg:
+    - network-manager-openvpn-gnome
