@@ -24,6 +24,9 @@
   # - name: Install Teams
   #   ansible.builtin.import_tasks: teams.yaml
 
+  - name: Install VPN
+    ansible.builtin.import_tasks: vpn.yaml
+
   - name: Install Zoom
     ansible.builtin.import_tasks: zoom.yaml
 
