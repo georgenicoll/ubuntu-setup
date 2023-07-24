@@ -3,7 +3,7 @@
   become: false
   block:
 
-  - name: Find nix-env 
+  - name: Find nix-env
     ansible.builtin.shell: which nix-env || echo "Not There"
     register: nix_env_location
 
@@ -13,7 +13,7 @@
 
   - name: Bomb out and ask user to download nix if it's not there
     ansible.builtin.fail:
-      msg: > 
+      msg: >
         nix was not found, please install by following instructions at
         https://nixos.org/manual/nix/stable/installation/installing-binary.html
         to install a multi user installation
@@ -27,20 +27,20 @@
     ansible.builtin.include_tasks: nix-install-app.yaml
     loop:
       - nixpkgs.firefox
-      - nixpkgs.obsidian
+    #  - nixpkgs.obsidian
 
   - name: Nix desktop links
     ansible.builtin.include_tasks: nix-desktop-file.yaml
     loop:
-    - { 
-        desktop_file: firefox.desktop, 
-        add_link: true,
-        icon: firefox.png, 
-        fix_icon: true 
-      }
     - {
-        desktop_file: obsidian.desktop,
+        desktop_file: firefox.desktop,
         add_link: true,
-        icon: obsidian.png,
+        icon: firefox.png,
         fix_icon: true
       }
+    #- {
+    #    desktop_file: obsidian.desktop,
+    #    add_link: true,
+    #    icon: obsidian.png,
+    #    fix_icon: true
+    #  }
