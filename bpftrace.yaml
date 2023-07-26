@@ -1,0 +1,57 @@
+---
+- name: bpftrace tasks
+  become: no
+  block:
+
+  - name: bpftrace pre-requisites (in addition to the bpf ones)
+    become: yes
+    ansible.builtin.apt:
+      pkg:
+      - g++
+      - systemtap-sdt-dev
+      - binutils-dev
+      - libcereal-dev
+      - llvm-dev
+      - llvm-runtime
+      - libclang-dev
+      - libpcap-dev
+      - libgtest-dev
+      - libgmock-dev
+      - asciidoctor
+      - libdw-dev
+      - pahole
+
+  - name: get bpftrace git repo
+    ansible.builtin.git:
+      repo: https://github.com/iovisor/bpftrace
+      dest: git/bpftrace
+      recursive: yes
+      clone: yes
+      update: yes
+      version: master
+
+  - name: make bpftrace build directory
+    ansible.builtin.file:
+      path: git/bpftrace/build
+      state: directory
+
+  - name: build bpftrace (1)
+    ansible.builtin.shell:
+      chdir: git/bpftrace/build
+      cmd: ../build-libs.sh
+
+  - name: build bpftrace (2)
+    ansible.builtin.shell:
+      chdir: git/bpftrace/build
+      cmd: cmake -DCMAKE_BUILD_TYPE=Release ..
+
+  - name: build bpftrace (3)
+    ansible.builtin.shell:
+      chdir: git/bpftrace/build
+      cmd: make -j8
+
+  - name: install bpftrace
+    become: yes
+    ansible.builtin.shell:
+      chdir: git/bpftrace/build
+      cmd: make install
