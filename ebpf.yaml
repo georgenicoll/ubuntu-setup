@@ -13,7 +13,7 @@
 
   # See https://github.com/iovisor/bcc/blob/master/INSTALL.md#ubuntu---source and
   #     https://github.com/georgenicoll/xdp-tutorial/blob/master/setup_dependencies.org
-  - name: Install packages
+  - name: Install ebpf packages
     become: yes
     ansible.builtin.apt:
       pkg:
@@ -47,7 +47,6 @@
       - linux-tools-generic
       - linux-cloud-tools-generic
       - tcpdump
-      - bpftrace
 
   - name: get bcc git repo
     ansible.builtin.git:
@@ -94,7 +93,6 @@
       chdir: git/bcc/build/src/python
       cmd: make install
 
-
   - name: get bpftool git repo
     ansible.builtin.git:
       repo: https://github.com/libbpf/bpftool.git
@@ -114,3 +112,6 @@
     ansible.builtin.shell:
       chdir: git/bpftool/src
       cmd: make install
+
+  - name: bpftrace
+    ansible.builtin.import_tasks: bpftrace.yaml
