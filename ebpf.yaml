@@ -47,6 +47,7 @@
       - linux-tools-generic
       - linux-cloud-tools-generic
       - tcpdump
+      - bpftrace
 
   - name: get bcc git repo
     ansible.builtin.git:
