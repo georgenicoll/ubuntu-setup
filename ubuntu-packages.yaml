@@ -39,3 +39,4 @@
     - gnome-pie
     - inetutils-traceroute
     - htop
+    - protobuf-compiler
