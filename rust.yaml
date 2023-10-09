@@ -35,7 +35,7 @@
     ansible.builtin.shell: rustup update
     when: rustup.stdout != "Missing"
 
-  - name: Install other stuff (llvm)
+  - name: Install other stuff (llvm/lld/clang)
     become: yes
     ansible.builtin.apt:
       pkg:
@@ -53,3 +53,7 @@
         - llvm-14
         - libclang1-14
         - libclang-common-14-dev
+        - llvm
+        - llvm-dev
+        - lld
+        - clang
