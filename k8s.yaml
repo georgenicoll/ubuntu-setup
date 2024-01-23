@@ -60,7 +60,7 @@
         regexp: "source <\\(helm completion bash\\)"
         line: source <(helm completion bash)
 
-  - name: krew and kind
+  - name: krew
     become: no
     ignore_errors: true
     block:
@@ -86,6 +86,32 @@
       loop:
       - ctx
       - ns
+
+  - name: k9s
+    become: no
+    ignore_errors: true
+    block:
+
+    - name: Download k9s deb
+      ansible.builtin.get_url:
+        url: https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb
+        dest: ~/Downloads/
+        force: true
+      register: k9s
+
+    - name: Downloaded k9s File
+      ansible.builtin.debug:
+        msg: "Downloaded to {{ k9s.dest }}"
+
+    - name: Install k9s
+      become: yes
+      ansible.builtin.apt:
+        deb: "{{ k9s.dest }}"
+
+  - name: kind
+    become: no
+    ignore_errors: true
+    block:
 
     - name: Install kind
       ansible.builtin.shell: go install sigs.k8s.io/kind@latest

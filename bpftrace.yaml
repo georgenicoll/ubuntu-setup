@@ -1,5 +1,6 @@
 ---
 - name: bpftrace tasks
+  when: false
   become: no
   block:
 
