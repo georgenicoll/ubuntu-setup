@@ -1,0 +1,7 @@
+---
+# https://semgrep.dev/docs/getting-started/quickstart/
+- name: Install semgrep using pip
+  ansible.builtin.pip:
+    name: semgrep
+    state: present
+    

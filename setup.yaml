@@ -42,6 +42,9 @@
   - name: Install Dev Tools
     ansible.builtin.import_tasks: dev.yaml
 
+  - name: Install semgrep
+    ansible.builtin.import_tasks: semgrep.yaml
+
   - name: Install Docker
     ansible.builtin.import_tasks: docker.yaml
 
