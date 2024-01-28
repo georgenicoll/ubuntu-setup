@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    llvm_version: 17
+  become: yes
+
+  tasks:
+
+  - name: Cilium bpf tools
+    ansible.builtin.import_tasks: cilium-ebpf.yaml
