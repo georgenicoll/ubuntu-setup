@@ -21,7 +21,7 @@
 
     - name: Download go file
       ansible.builtin.get_url:
-        url: https://go.dev/dl/go1.19.2.linux-amd64.tar.gz
+        url: https://go.dev/dl/go1.21.6.linux-amd64.tar.gz
         dest: ~/Downloads/
       register: go_download
 

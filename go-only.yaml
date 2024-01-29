@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  gather_facts: no
+  become: yes
+
+  tasks:
+
+  - name: Go
+    ansible.builtin.import_tasks: go.yaml
