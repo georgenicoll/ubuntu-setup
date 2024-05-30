@@ -10,4 +10,5 @@
   become: yes
   ansible.builtin.apt:
     deb: "{{ chrome_download.dest }}"
+  ignore_errors: yes
 

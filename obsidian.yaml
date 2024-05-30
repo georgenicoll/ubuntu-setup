@@ -17,7 +17,6 @@
   - name: Get latest obsidian release version from gitlab
     ansible.builtin.shell:
       cmd: curl --silent "{{ obsidian_github_api_endpoint }}" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
-      warn: false
     register: obsidian_version
 
   - name: Output obsidian version
