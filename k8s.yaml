@@ -1,6 +1,8 @@
 ---
 - name: k8s tools
   become: yes
+  vars:
+    k8s_version: v1.30
   block:
 
   - name: k8s tools pre-reqs
@@ -11,19 +13,19 @@
       - apt-transport-https
       - fzf
 
-  - name: Get architecture
+  - name: Get architecture k8
     ansible.builtin.shell: dpkg --print-architecture
     register: architecture
 
-  # Adapted from https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management
+  - name: Remove kubernetes-archive gpg key
+    ansible.builtin.shell: "rm -f /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+
   - name: Add kubernetes-archive gpg key
-    ansible.builtin.apt_key:
-      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-      keyring: /etc/apt/keyrings/kubernetes-archive.gpg
+    ansible.builtin.shell: "curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
 
   - name: Add kubernetes repo
     ansible.builtin.apt_repository:
-      repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-archive.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+      repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/deb/ /"
       state: present
 
   # See https://helm.sh/docs/intro/install/#from-apt-debianubuntu

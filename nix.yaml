@@ -18,7 +18,25 @@
         https://nixos.org/manual/nix/stable/installation/installing-binary.html
         to install a multi user installation
         [usually $ sh <(curl -L https://nixos.org/nix/install) --daemon]
+        or update? https://nix.dev/manual/nix/2.22/installation/upgrading
+        [$ nix-shell -p nix -I nixpkgs=channel:nixpkgs-unstable --run "nix --version"]
     when: nix_env_location.stdout == "Not There"
+
+  # - name: Update to latest unstable
+  #   ansible.builtin.shell: nix-env --install --file '<nixpkgs>' --attr nix cacert -I nixpkgs=channel:nixpkgs-unstable
+  #   become: yes
+
+  # - name: reload nix-daemon
+  #   ansible.builtin.service:
+  #     name: nix-daemon
+  #     state: reloaded
+  #   become: yes
+
+  # - name: restart nix-daemon
+  #   ansible.builtin.service:
+  #     name: nix-daemon
+  #     state: restarted
+  #   become: yes
 
   - name: Update channels
     ansible.builtin.shell: nix-channel --update
