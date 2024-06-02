@@ -20,7 +20,7 @@
     state: absent
     pkg:
     - chromium-browser
-    - firefox
+    #- firefox - we were replacing with the nix version.  Uncomment if we go back to doing that (and comment below)
 
 - name: Install packages
   ansible.builtin.apt:
@@ -40,3 +40,4 @@
     - inetutils-traceroute
     - htop
     - protobuf-compiler
+    - firefox # Comment if we go back to installing the nix version (and uncomment above)

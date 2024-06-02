@@ -117,3 +117,21 @@
 
     - name: Install kind
       ansible.builtin.shell: go install sigs.k8s.io/kind@latest
+
+  - name: skaffold
+    become: no
+    ignore_errors: true
+    block:
+
+    - name: Download skaffold
+      ansible.builtin.get_url:
+        url: https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+        dest: ~/Downloads/skaffold
+        force: true
+      register: skaffold
+
+    - name: Install skaffold
+      ansible.builtin.shell: install {{ skaffold.dest }} /usr/local/bin/
+      become: yes
+
+

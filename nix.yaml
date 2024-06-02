@@ -1,6 +1,7 @@
 ---
 - name: Tasks
   become: false
+  when: false # If switching back to nix for firefox, do commenting/uncommenting in ubuntu-packages.yaml as well.
   block:
 
   - name: Find nix-env
