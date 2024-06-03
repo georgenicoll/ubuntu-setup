@@ -8,6 +8,9 @@
   - name: Install Ubuntu Packages
     ansible.builtin.import_tasks: ubuntu-packages.yaml
 
+  - name: Install Python and Modules
+    ansible.builtin.import_tasks: python.yaml
+
   - name: Install obsidian
     ansible.builtin.import_tasks: obsidian.yaml
 

@@ -56,3 +56,8 @@
     ansible.builtin.shell:
       chdir: git/bpftrace/build
       cmd: make install
+
+  - name: remove bpftrace gitrepo
+    ansible.builtin.file:
+      path: git/bpftrace
+      state: absent

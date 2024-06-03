@@ -115,3 +115,13 @@
 
   - name: bpftrace
     ansible.builtin.import_tasks: bpftrace.yaml
+
+  - name: remove bpftool gitrepo
+    ansible.builtin.file:
+      path: git/bpftool
+      state: absent
+
+  - name: remove bcc gitrepo
+    ansible.builtin.file:
+      path: git/bcc
+      state: absent

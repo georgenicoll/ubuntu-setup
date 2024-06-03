@@ -1,0 +1,16 @@
+# All tasks here expect become: yes
+---
+- name: Python and modules
+  become: yes
+  block:
+
+  - name: Install packages
+    ansible.builtin.apt:
+      state: present
+      pkg:
+        - python3
+        - jq
+
+  - name: Install yq
+    ansible.builtin.pip:
+      name: yq
