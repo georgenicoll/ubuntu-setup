@@ -1,0 +1,39 @@
+---
+# From https://opentofu.org/docs/intro/install/deb/#step-by-step-instructions
+- name: opentofu install
+  become: yes
+  vars:
+  block:
+
+  - name: Install opentofu dependencies
+    ansible.builtin.apt:
+      pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+
+  - name: Setup the opentofu repository key (1)
+    ansible.builtin.apt_key:
+      url: https://get.opentofu.org/opentofu.gpg
+      keyring: /etc/apt/keyrings/opentofu.gpg
+
+  - name: Setup the opentofu repository key (2)
+    ansible.builtin.apt_key:
+      url: https://packages.opentofu.org/opentofu/tofu/gpgkey
+      keyring: /etc/apt/keyrings/opentofu-repo.gpg
+
+  - name: Add Opentofu repo (1)
+    ansible.builtin.apt_repository:
+      repo: "deb [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main"
+      filename: /etc/apt/sources.list.d/opentofu.list
+
+  - name: Add Opentofu repo (2)
+    ansible.builtin.apt_repository:
+      repo: "deb-src [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main"
+      filename: /etc/apt/sources.list.d/opentofu.list
+
+  - name: Install opentofu dependencies
+    ansible.builtin.apt:
+      pkg: tofu
+      update_cache: true

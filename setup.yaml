@@ -54,6 +54,9 @@
   - name: Install k8s Tools
     ansible.builtin.import_tasks: k8s.yaml
 
+  - name: Install opentofu client tools
+    ansible.builtin.import_tasks: opentofu.yaml
+
   - name: Install vagrant
     ansible.builtin.import_tasks: vagrant.yaml
 
