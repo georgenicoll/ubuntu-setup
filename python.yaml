@@ -16,6 +16,7 @@
         - python3
         - python3.11
         - python3.12
+        - python3.12-full
         - jq
 
   - name: Install yq
