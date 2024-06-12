@@ -41,3 +41,4 @@
     - htop
     - protobuf-compiler
     - firefox # Comment if we go back to installing the nix version (and uncomment above)
+    - flatpak

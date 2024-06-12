@@ -1,0 +1,40 @@
+---
+- name: Firefox PWA installation steps
+  become: no
+  vars:
+    firefox_pwa_github_api_endpoint: "https://api.github.com/repos/filips123/PWAsForFirefox/releases/latest"
+  block:
+
+  - name: Get home directory
+    ansible.builtin.shell:
+      cmd: echo "$(dirname ~)/$(basename ~)"
+    register: home_dir
+
+  - name: Output home directory
+    ansible.builtin.debug:
+      msg: Home directory is {{ home_dir.stdout }}
+
+  - name: Get latest firefox PWA release version from gitlab
+    ansible.builtin.shell:
+      cmd: curl --silent "{{ firefox_pwa_github_api_endpoint }}" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
+    register: pwa_version
+
+  - name: Output Firefox PWA version
+    ansible.builtin.debug:
+      msg: Latest Firefox PWA version is {{ pwa_version.stdout }}
+
+  - name: Download Firefox PWA deb
+    ansible.builtin.get_url:
+      url: "https://github.com/filips123/PWAsForFirefox/releases/download/{{ pwa_version.stdout }}/firefoxpwa_{{ pwa_version.stdout | replace('v', '') }}_amd64.deb"
+      dest: "{{ home_dir.stdout }}/Downloads/firefoxpwa_{{ pwa_version.stdout }}.deb"
+      force: true
+
+  - name: Install Firefox PWA
+    become: yes
+    ansible.builtin.apt:
+      deb: "{{ home_dir.stdout }}/Downloads/firefoxpwa_{{ pwa_version.stdout }}.deb"
+
+  # Why?  See: https://github.com/filips123/PWAsForFirefox/issues/76#issuecomment-1247300277
+  - name: Tweak webextensions permissions
+    ansible.builtin.shell:
+      cmd: flatpak permission-set webextensions firefoxpwa snap.firefox yes
