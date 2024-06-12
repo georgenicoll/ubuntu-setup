@@ -1,4 +1,5 @@
 ---
+## Needs some setup, see moz-extension://89823d58-2f74-4ee1-a221-8f1ab7bcbf66/setup/install.html
 - name: Firefox PWA installation steps
   become: no
   vars:
