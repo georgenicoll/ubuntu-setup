@@ -4,10 +4,11 @@
   become: yes
   block:
 
-  - name: Add deadsnake ppa repo
-    ansible.builtin.apt_repository:
-      repo: ppa:deadsnakes/ppa
-      update_cache: yes
+  # deadsnake not needed anymore
+  #- name: Add deadsnake ppa repo
+  #  ansible.builtin.apt_repository:
+  #    repo: ppa:deadsnakes/ppa
+  #    update_cache: yes
 
   - name: Install packages
     ansible.builtin.apt:
@@ -18,7 +19,9 @@
         - python3.12
         - python3.12-full
         - jq
+        - yq
 
-  - name: Install yq
-    ansible.builtin.pip:
-      name: yq
+  # yq now comes from apt
+  #- name: Install yq
+  #  ansible.builtin.pip:
+  #    name: yq

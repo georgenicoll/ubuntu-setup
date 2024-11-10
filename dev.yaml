@@ -11,7 +11,7 @@
   - name: java
     ansible.builtin.apt:
       pkg:
-      - openjdk-18-jdk
+      - openjdk-21-jdk
       - maven
       - gradle
 

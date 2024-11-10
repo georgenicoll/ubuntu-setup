@@ -48,8 +48,9 @@
   - name: Install Dev Tools
     ansible.builtin.import_tasks: dev.yaml
 
-  - name: Install semgrep
-    ansible.builtin.import_tasks: semgrep.yaml
+  # This now need to be installed in a virtual environment
+  #- name: Install semgrep
+  #  ansible.builtin.import_tasks: semgrep.yaml
 
   - name: Install Docker
     ansible.builtin.import_tasks: docker.yaml

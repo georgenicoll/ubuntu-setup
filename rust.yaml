@@ -47,12 +47,12 @@
         - linux-headers-generic
         - pkg-config
         - libclang-dev
-        - llvm-13
-        - libclang1-13
-        - libclang-common-13-dev
-        - llvm-14
-        - libclang1-14
-        - libclang-common-14-dev
+        - llvm-16
+        - libclang1-16
+        - libclang-common-16-dev
+        - llvm-17
+        - libclang1-17
+        - libclang-common-17-dev
         - llvm
         - llvm-dev
         - lld

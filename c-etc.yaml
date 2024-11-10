@@ -3,12 +3,12 @@
   become: yes
   block:
 
-  - name: Install clang-12
+  - name: Install clang-17
     ansible.builtin.apt:
       state: present
       pkg:
       - clang
-      - clang-12
-      - llvm 
+      - clang-17
+      - llvm
       install_recommends: yes
 
