@@ -1,0 +1,58 @@
+---
+- name: zig installation steps
+  become: no
+  vars:
+    zig_version: 0.13.0
+    zig_url: https://ziglang.org/download/{{ zig_version }}/zig-linux-x86_64-{{ zig_version }}.tar.xz
+  block:
+
+    - name: Download zig release
+      ansible.builtin.get_url:
+        url: "{{ zig_url }}"
+        dest: ~/Downloads/zig-{{ zig_version }}.tar.xz
+      register: zig_download
+
+    - name: zig download destination
+      ansible.builtin.debug:
+        var: zig_download.dest
+
+    - name: remove the current zig installation directory
+      ansible.builtin.file:
+        path: ~/zig/{{ zig_version }}
+        state: absent
+
+    - name: create a fresh zig installation directory
+      ansible.builtin.file:
+        path: ~/zig/{{ zig_version }}
+        state: directory
+
+    - name: extract to zig directory
+      ansible.builtin.unarchive:
+        src: "{{ zig_download.dest }}"
+        dest: ~/zig/{{ zig_version }}
+
+    - name: acertain the top level zig directory name extracted
+      ansible.builtin.shell: ls ~/zig/{{ zig_version }} | tail -n 1
+      register: zig_extract_dir
+
+    - name: zig extract dir
+      ansible.builtin.debug:
+        var: zig_extract_dir.stdout
+
+    - name: add zig home to .bashrc
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        regexp: '^export ZIG_HOME=~/zig/(.*)$'
+        state: present
+        line: export ZIG_HOME=~/zig/{{ zig_version }}/{{ zig_extract_dir.stdout }}
+
+    - name: add zig to the path in .bashrc
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        regexp: '^PATH=\$ZIG_HOME:\$PATH$'
+        state: present
+        line: export PATH=$ZIG_HOME:$PATH
+
+    - name: zig message
+      ansible.builtin.debug:
+        msg: "!!! Zig added to path, terminals may need to be restarted to pick this up !!!"
