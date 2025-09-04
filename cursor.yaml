@@ -1,0 +1,29 @@
+---
+- name: "Fetch download URL from Cursor API for linux-x64"
+  ansible.builtin.uri:
+    url: "https://www.cursor.com/api/download?platform=linux-x64&releaseTrack=stable"
+    method: GET
+    return_content: yes
+    status_code: 200
+  register: cursor_api_response
+
+- name: Cursor dowload URL
+  ansible.builtin.debug:
+    msg: "Download url is {{ cursor_api_response.json.debUrl }}"
+
+- name: Get cursor deb
+  become: no
+  ansible.builtin.get_url:
+    url: "{{ cursor_api_response.json.debUrl }}"
+    dest: ~/Downloads/cursor.latest.deb
+    force: yes
+  register: cursor
+
+- name: Downloaded cursor File
+  ansible.builtin.debug:
+    msg: "Downloaded to {{ cursor.dest }}"
+
+- name: Install cursor
+  ansible.builtin.apt:
+    deb: "{{ cursor.dest }}"
+

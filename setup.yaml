@@ -26,6 +26,9 @@
   - name: Install vscode
     ansible.builtin.import_tasks: vscode.yaml
 
+  - name: Install cursor
+    ansible.builtin.import_tasks: cursor.yaml
+
   # - name: Install Citrix
   #   ansible.builtin.import_tasks: citrix.yaml
 

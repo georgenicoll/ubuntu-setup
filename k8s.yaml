@@ -28,16 +28,17 @@
       repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/deb/ /"
       state: present
 
-  # See https://helm.sh/docs/intro/install/#from-apt-debianubuntu
-  - name: Add helm gpg key
-    ansible.builtin.apt_key:
-      url: https://baltocdn.com/helm/signing.asc
-      keyring: /etc/apt/keyrings/helm.gpg
+  # helm no longer 
+  # # See https://helm.sh/docs/intro/install/#from-apt-debianubuntu
+  # - name: Add helm gpg key
+  #   ansible.builtin.apt_key:
+  #     url: https://baltocdn.com/helm/signing.asc
+  #     keyring: /etc/apt/keyrings/helm.gpg
 
-  - name: Add helm {{ architecture.stdout }} repo
-    ansible.builtin.apt_repository:
-      repo: "deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
-      state: present
+  # - name: Add helm {{ architecture.stdout }} repo
+  #   ansible.builtin.apt_repository:
+  #     repo: "deb [arch={{ architecture.stdout }} signed-by=/etc/apt/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+  #     state: present
 
   - name: Install tools
     ansible.builtin.apt:
