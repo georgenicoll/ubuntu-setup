@@ -42,3 +42,5 @@
     - protobuf-compiler
     - firefox # Comment if we go back to installing the nix version (and uncomment above)
     - flatpak
+    - gnupg2
+    - libcurl4-openssl-dev

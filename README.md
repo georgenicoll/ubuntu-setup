@@ -19,6 +19,14 @@ see [ansible.cfg](ansible.cfg) and [hosts.yaml](hosts.yaml).
 
 Some steps require elevation so become is required.
 
+## Required ansible galaxy packages
+
+```bash
+sudo ansible-galaxy collection install ansible.posix --force
+```
+
+## Run the playbook
+
 Run with:
 
 ```bash

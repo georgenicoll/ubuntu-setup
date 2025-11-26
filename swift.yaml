@@ -1,0 +1,87 @@
+---
+- name: swift installation steps
+  become: no
+  vars:
+    swiftly_version: 1.1.0
+    swiftly_url: "https://download.swift.org/swiftly/linux/swiftly-1.1.0-x86_64.tar.gz"
+    swiftly_remote_keys: "https://www.swift.org/keys/all-keys.asc"
+    swiftly_local_keys: "~/Downloads/swiftly-keys.asc"
+    swiftly_keyring: "~/Downloads/swiftly.gpg"
+    swiftly_extract_dir: "~/Downloads/swiftly-{{ swiftly_version }}"
+  block:
+
+    - name: Download swiftly
+      ansible.builtin.get_url:
+        url: "{{ swiftly_url }}"
+        dest: ~/Downloads/swiftly-{{ swiftly_version }}.tar.gz
+      register: swiftly_download
+
+    - name: swiftly download destination
+      ansible.builtin.debug:
+        var: swiftly_download.dest
+
+    - name: Download swiftly all-keys
+      ansible.builtin.get_url:
+        url: "{{ swiftly_remote_keys }}"
+        dest: "{{ swiftly_local_keys }}"
+      register: swiftly_all_keys
+
+    - name: Import swiftly public keys
+      ansible.builtin.command: >
+        gpg --no-default-keyring
+            --keyring "{{ swiftly_keyring }}"
+            --import "{{ swiftly_all_keys.dest }}"
+
+    - name: Download swiftly signature
+      ansible.builtin.get_url:
+        url: "{{ swiftly_url }}.sig"
+        dest: ~/Downloads/swiftly-{{ swiftly_version }}.tar.gz.sig
+      register: swiftly_sig
+
+    - name: swiftly signature download destination
+      ansible.builtin.debug:
+        var: swiftly_sig.dest
+
+    - name: Verify swiftly signature
+      ansible.builtin.command: >
+        gpg --no-default-keyring
+            --keyring "{{ swiftly_keyring }}"
+            --verify "{{ swiftly_sig.dest }}" "{{ swiftly_download.dest }}"
+      register: verify_output
+      changed_when: false
+      failed_when: verify_output.rc != 0
+
+    - name: remove the current swiftly archive dir
+      ansible.builtin.file:
+        path: "{{ swiftly_extract_dir }}"
+        state: absent
+
+    - name: create a fresh swiftly installation directory
+      ansible.builtin.file:
+        path: "{{ swiftly_extract_dir }}"
+        state: directory
+
+    - name: extract to swiftly directory
+      ansible.builtin.unarchive:
+        src: "{{ swiftly_download.dest }}"
+        dest: "{{ swiftly_extract_dir }}"
+
+    - name: run swiftly init
+      ansible.builtin.command: "{{ swiftly_extract_dir }}/swiftly init"
+      register: swiftly_init
+      changed_when: swiftly_init.rc == 0
+
+    - name: swiftly init output
+      ansible.builtin.debug:
+        var: swiftly_init.stdout_lines
+
+    - name: source swift in .bashrc
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        regexp: '^. ~/.local/share/swiftly/env.sh$'
+        state: present
+        line: ". ~/.local/share/swiftly/env.sh"
+
+    - name: swiftly message
+      ansible.builtin.debug:
+        msg: "!!! Sourcing swift env.sh added to .bashrc, terminals may need to be restarted to pick this up !!!"

@@ -33,6 +33,9 @@
   - name: node
     ansible.builtin.import_tasks: node.yaml
 
+  - name: swift
+    ansible.builtin.import_tasks: swift.yaml
+
   - name: zig
     ansible.builtin.import_tasks: zig.yaml
 
